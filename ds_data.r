@@ -102,21 +102,36 @@ ds_data <- function(dat, target_dir, spp, phstrip) {
                 # for each record in this FILEID > LEGNO2
                 if (tmp.tmp.dat$OnOff.Effort[k] == 1 &
                     tmp.tmp.dat$OnOff.Effort[k + 1] == 1) {
+                    # # if on-effort at two consecutive records
+                    # # apply distance function to calculate distance between on-effort records
+                    # tmp.tmp.dat$pt2pt.effort[k] <-
+                    #     dist.rdk(
+                    #         tmp.tmp.dat$LATITUDE[k],
+                    #         tmp.tmp.dat$LATITUDE[k + 1],
+                    #         tmp.tmp.dat$LONGITUDE[k],
+                    #         tmp.tmp.dat$LONGITUDE[k + 1]
+                    #     )
+                    # # Also! insert calculated distance into original dataset
+                    # dat$pt2pt.effort[I[J[k]]] <-
+                    #     dist.rdk(dat$LATITUDE[I[J[k]]],
+                    #              dat$LATITUDE[I[J[k + 1]]],
+                    #              dat$LONGITUDE[I[J[k]]],
+                    #              dat$LONGITUDE[I[J[k + 1]]])
                     # if on-effort at two consecutive records
                     # apply distance function to calculate distance between on-effort records
                     tmp.tmp.dat$pt2pt.effort[k] <-
-                        dist.rdk(
+                        fn.grcirclkm(
                             tmp.tmp.dat$LATITUDE[k],
-                            tmp.tmp.dat$LATITUDE[k + 1],
                             tmp.tmp.dat$LONGITUDE[k],
+                            tmp.tmp.dat$LATITUDE[k + 1],
                             tmp.tmp.dat$LONGITUDE[k + 1]
                         )
                     # Also! insert calculated distance into original dataset
                     dat$pt2pt.effort[I[J[k]]] <-
-                        dist.rdk(dat$LATITUDE[I[J[k]]],
-                                 dat$LATITUDE[I[J[k + 1]]],
-                                 dat$LONGITUDE[I[J[k]]],
-                                 dat$LONGITUDE[I[J[k + 1]]])
+                        fn.grcirclkm(dat$LATITUDE[I[J[k]]],
+                                     dat$LONGITUDE[I[J[k]]],
+                                     dat$LATITUDE[I[J[k + 1]]],
+                                     dat$LONGITUDE[I[J[k + 1]]])
                 }
             }
             

@@ -38,9 +38,16 @@ ds_data_prep <- function(dat, season.beg, season.end, condensed) {
     # look at all legnos in the data
     sort(unique(dat$LEGNO))
     
-    # discard all data that does not have a LEGNO
-    dat <- dat %>%
-        filter(!is.na(LEGNO))
+    # discard all data that does not have a LEGNO 
+    ### Taking this out for Encounter rate mileage calcs
+    #dat <- dat %>%
+     #   filter(!is.na(LEGNO))
+    
+    
+    # all 999s are flight without newLegNos (circling, crossleg, on watch)
+    I <- which(is.na(dat$LEGNO))
+    dat$LEGNO[I] <- 999
+
     
     # name the columns to remove/keep from BK data 'dat' file as unnecessary/necessary
     keep.cols <- c(
@@ -126,7 +133,7 @@ ds_data_prep <- function(dat, season.beg, season.end, condensed) {
     dat.new <- dat %>%
         filter((YEAR == 2012 &
                     MONTH == 12) | (YEAR >= 2013 & YEAR <= 2015)) %>%
-        filter(LEGNO < 100)
+        filter(LEGNO < 100 | LEGNO == 999)
     dat.general.2013_2015 <-
         left_join(dat.new, newLegnos.new, by = 'LEGNO')
     dat.general.2013_2015$stratum <- "general.2013_2015"
@@ -250,7 +257,7 @@ ds_data_prep <- function(dat, season.beg, season.end, condensed) {
     
     # find row numbers that are on-effort
     I1 <-
-        which(dat$LEGTYPE == 2) # all LEGTYPE = 2 are acceptable as on-effort
+        which(dat$LEGTYPE != 0) # all LEGTYPE 1, 2, 3, 4 are acceptable as on-effort
     I2 <-
         which(dat$VISIBLTY >= 2 &
                   dat$ALT < 366) # find row numbers with acceptable VIZ and ALT
