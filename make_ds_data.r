@@ -1,4 +1,4 @@
-#make ds data
+#make ds data - motified to run codes that include all legno != 0 as on-effort
 library(tidyverse)
 
 rm(list=ls())
@@ -11,7 +11,7 @@ dat <- read.csv("/Volumes/vestigal/Documents/WorkDocuments/Projects/MassCEC2731/
 
 ## select your season beginning and ending as "YEAR.MO"
 season.beg <- 2019.01
-season.end <- 2019.12
+season.end <- 2019.03
 
 ## specify data directory and place where new files will be saved
 target_dir <- paste(getwd(), "/output/", sep="")
@@ -19,18 +19,19 @@ print(target_dir)
 
 ## run ds_data_prep.r
 #set condensed to 1 or 0 to include or exclude condensed surveys
-condensed = 0
+condensed = 1
 source('ds_data_prep.r')
 dat <- ds_data_prep(dat, season.beg, season.end, condensed)
 
-## run ds_data.r
+# select distance calculation method. options are 'rdk' or 'eab' for bob kenney version or great circle function from elizbeth becker's code
+dist.method = "rdk"
+#dist.method = "eab"
+
 # select species to include
-#spp = c("RIWH","FIWH","HUWH","SEWH")
-# spp = c("RIWH")
+spp = c("RIWH","FIWH","HUWH","SEWH")
+#spp = c("RIWH")
 #spp = c("RIWH","HUWH")
 #spp = c("RIWH","HUWH","FIWH","SEWH")
 
-#set phstrip to 0 or 1.
-# phstrip = 1
-# source('ds_data_wLegno999.r')
-# ds_data(dat, target_dir, spp, phstrip)
+source('ds_data_wLegno999.r')
+ds_data_wLegno999(dat, target_dir, spp, dist.method)
