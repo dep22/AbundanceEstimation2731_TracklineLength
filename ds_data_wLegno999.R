@@ -22,8 +22,13 @@ ds_data_wLegno999 <- function(dat, target_dir, spp, dist.method){
     names(effort_summary) <-
         c("FILEID", "YEAR", "MONTH", "DAY", "Effort")
     
+    #add in fields for species - number sightings and number animals
     for (i in 1:uSpp){
-        cmd = paste("effort_summary$", spp[i], "= NA", sep = "")
+        #number sightings
+        cmd = paste("effort_summary$", spp[i], ".sights", "= NA", sep = "")
+        eval(parse(text = cmd))
+        #number animals
+        cmd = paste("effort_summary$", spp[i], ".ind", "= NA", sep = "")
         eval(parse(text = cmd))
     }
     
@@ -133,12 +138,20 @@ ds_data_wLegno999 <- function(dat, target_dir, spp, dist.method){
         effort_summary$Effort[ctr] <-
             sum(tmp.dat$pt2pt.effort, na.rm = TRUE)
         
-        #get count of species
+        #get count of species. # THIS WILL SUM *ALL* SIGHTINGS AND ANIMALS
         for (j in 1:uSpp) {
             # find all of target species, exclude camera sightings, include legstage only == 2 or NA, and restrict idrel to 2 or 3.
-            J = which(tmp.dat$SPECCODE == spp[j])
-            cmd = paste("effort_summary$", spp[j], "[i]=length(J)", sep = "")
+            J = which(tmp.dat$SPECCODE == spp[j] & (tmp.dat$LEGSTAGE != 7 | is.na(tmp.dat$LEGSTAGE)))
+            cmd = paste("effort_summary$", spp[j], ".sights", "[i]=length(J)", sep = "")
             eval(parse(text = cmd))
+            
+            if (!is_empty(J)){
+                cmd = paste("effort_summary$", spp[j], ".ind", "[i]=sum(tmp.dat$NUMBER[J])", sep = "")
+                eval(parse(text = cmd))
+            } else {
+                cmd = paste("effort_summary$", spp[j], ".ind", "[i]=0", sep = "")
+                eval(parse(text = cmd))
+            }
         }
     }
     
