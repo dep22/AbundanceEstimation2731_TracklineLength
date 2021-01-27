@@ -24,8 +24,8 @@ source('ds_data_prep.r')
 dat <- ds_data_prep(dat, season.beg, season.end, condensed)
 
 # select distance calculation method. options are 'rdk' or 'eab' for bob kenney version or great circle function from elizbeth becker's code
-dist.method = "rdk"
-#dist.method = "eab"
+#dist.method = "rdk"
+dist.method = "eab"
 
 # select species to include
 spp = c("RIWH","FIWH","HUWH","SEWH")
