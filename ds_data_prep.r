@@ -264,7 +264,8 @@ ds_data_prep <- function(dat, season.beg, season.end, condensed) {
         which(dat$LEGTYPE != 0) # all LEGTYPE 1, 2, 3, 4 are acceptable as on-effort
     I2 <-
         which(dat$VISIBLTY >= 2 &
-                  dat$ALT < 366) # find row numbers with acceptable VIZ and ALT
+                  dat$ALT < 366 &
+                  dat$BEAUFORT < 4) # find row numbers with acceptable VIZ, ALT and BFT
     Iall <-
         intersect(I1, I2) # the intersection of I1 and I2 are all row numbers that satisfy on-effort
     
