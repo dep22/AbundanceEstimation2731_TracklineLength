@@ -1,5 +1,10 @@
 ds_data_prep <- function(dat, season.beg, season.end, condensed) {
     # prepare dataset for ds_data.r
+    # This funciton was modified by Dan and Orla on Jan 26, 2021 
+    # The modification allows for all legtypes except 0
+    # The purpose of the modfication is to extend the definition of on-effort
+    # to additional legtypes so we can compute effort for SPUE and sighting rates metrics
+    # Where LEGNOs do not exist, we are inserting 999, and we have altered newLegnos.csv and renamed it newLegnos999.csv
     
     # discard LEGNO 222 (by changed it to NA) because it is E-W
     I = which(dat$LEGNO == 222)
@@ -38,12 +43,11 @@ ds_data_prep <- function(dat, season.beg, season.end, condensed) {
     # look at all legnos in the data
     sort(unique(dat$LEGNO))
     
-    # discard all data that does not have a LEGNO 
     ### Taking this out for Encounter rate mileage calcs
+    # discard all data that does not have a LEGNO 
     #dat <- dat %>%
      #   filter(!is.na(LEGNO))
-    
-    
+
     # all 999s are flight without newLegNos (circling, crossleg, on watch)
     I <- which(is.na(dat$LEGNO))
     dat$LEGNO[I] <- 999
@@ -85,7 +89,7 @@ ds_data_prep <- function(dat, season.beg, season.end, condensed) {
         select(keep.cols)
     
     # import legnos info for all surveys, strata, years
-    newLegnos <- read.csv("newLegnos.csv")
+    newLegnos <- read.csv("newLegnos999.csv")
     # create new column "LEGNO2" that has unique identifier for each "LEGNO". the identifier is the longitude of each legno.
     newLegnos$LEGNO2 = NA
     for (i in 1:nrow(newLegnos)) {
