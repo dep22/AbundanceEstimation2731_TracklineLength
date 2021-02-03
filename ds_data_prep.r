@@ -33,12 +33,12 @@ ds_data_prep <- function(dat, season.beg, season.end, condensed) {
     
     # discard Nova Scotia surveys (they have LEGNO 1:6, so they will trip us up if we don't get rid of them)
     I <- which(dat$LEGNO >= 1 & dat$LEGNO <= 6)
-    #plot(dat$LONGITUDE[I], dat$LATITUDE[I])
+    plot(dat$LONGITUDE[I], dat$LATITUDE[I])
     I <- which(dat$LONGITUDE > -68 & dat$LATITUDE > 42)
     dat$LEGNO[I] <- NA
         #check lines 1-6
         I <- which(dat$LEGNO >= 1 & dat$LEGNO <= 6)
-        #plot(dat$LONGITUDE[I], dat$LATITUDE[I])
+        plot(dat$LONGITUDE[I], dat$LATITUDE[I])
     
     # look at all legnos in the data
     sort(unique(dat$LEGNO))
@@ -137,11 +137,12 @@ ds_data_prep <- function(dat, season.beg, season.end, condensed) {
     dat.new <- dat %>%
         filter((YEAR == 2012 &
                     MONTH == 12) | (YEAR >= 2013 & YEAR <= 2015)) %>%
-        filter(LEGNO < 100 | LEGNO == 999)
+        filter(LEGNO < 100 | LEGNO == 999) %>%
+        filter(LONGITUDE < -68 & LATITUDE < 42) # remove nova scotia lines 1-6
     dat.general.2013_2015 <-
         left_join(dat.new, newLegnos.new, by = 'LEGNO')
     dat.general.2013_2015$stratum <- "general.2013_2015"
-    #points(dat.general.2013_2015$LONGITUDE, dat.general.2013_2015$LATITUDE, col = "blue")
+    points(dat.general.2013_2015$LONGITUDE, dat.general.2013_2015$LATITUDE, col = "blue")
     
     # RI stratum
     newLegnos.new <- newLegnos %>%
@@ -153,7 +154,7 @@ ds_data_prep <- function(dat, season.beg, season.end, condensed) {
     dat.RI <-
         left_join(dat.new, newLegnos.new, by = 'LEGNO') #WHY IS THE SIZE OF THIS INCORRECT?
     dat.RI$stratum <- "RI"
-    #points(dat.RI$LONGITUDE, dat.RI$LATITUDE, col = "red")
+    points(dat.RI$LONGITUDE, dat.RI$LATITUDE, col = "red")
     
     # 2017 - 2019 general stratum
     newLegnos.new <- newLegnos %>%
@@ -164,7 +165,7 @@ ds_data_prep <- function(dat, season.beg, season.end, condensed) {
     dat.general.2017_2020 <-
         left_join(dat.new, newLegnos.new, by = 'LEGNO')
     dat.general.2017_2020$stratum <- "general.2017_2020"
-    #points(dat.general.2017_2020$LONGITUDE, dat.general.2017_2020$LATITUDE, col = "yellow")
+    points(dat.general.2017_2020$LONGITUDE, dat.general.2017_2020$LATITUDE, col = "yellow")
     
     # 2017 - 2018 condensed-east stratum
     newLegnos.new <- newLegnos %>%

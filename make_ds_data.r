@@ -6,12 +6,12 @@ rm(list=ls())
 ## import data - !! data must be sorted YEAR > MONTH > DAY > FILEID > EVENTNO !!
 # alter this path for your computer
 #dat <- read.csv("/home/dan/Documents/WorkDocuments/Projects/MassCEC2731/Aerial survey data/BK Data Processed 2011 - 2018 ORIGINAL/NEAQ 2011-2019_PHSTRIP-dp1.csv")
-dat <- read.csv("/Volumes/vestigal/Documents/WorkDocuments/Projects/MassCEC2731/Aerial survey data/BK Data Processed 2011 - 2018 ORIGINAL/NEAQ 2011-2019_PHSTRIP-dp.csv")
-# dat <- read.csv("C://Users//oobrien//Documents//R_Work_Directory//Distance//NEAQ 2011-2019_PHSTRIP-dp.csv")
+#dat <- read.csv("/Volumes/vestigal/Documents/WorkDocuments/Projects/MassCEC2731/Aerial survey data/BK Data Processed 2011 - 2018 ORIGINAL/NEAQ 2011-2019_PHSTRIP-dp.csv")
+dat <- read.csv("C://Users//oobrien//Documents//R_Work_Directory//Distance//NEAQ 2011-2019_PHSTRIP-dp.csv")
 
 ## select your season beginning and ending as "YEAR.MO"
-season.beg <- 2019.01
-season.end <- 2019.03
+season.beg <- 2012.12
+season.end <- 2015.06
 
 ## specify data directory and place where new files will be saved
 target_dir <- paste(getwd(), "/output/", sep="")
@@ -28,8 +28,8 @@ dat <- ds_data_prep(dat, season.beg, season.end, condensed)
 dist.method = "eab"
 
 # select species to include
-spp = c("RIWH","FIWH","HUWH","SEWH")
-#spp = c("RIWH")
+#spp = c("RIWH","FIWH","HUWH","SEWH")
+spp = c("RIWH")
 #spp = c("RIWH","HUWH")
 #spp = c("RIWH","HUWH","FIWH","SEWH")
 
